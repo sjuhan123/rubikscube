@@ -1,4 +1,4 @@
-class rubikscube {
+class Rubikscube {
   constructor(){
     this.readline = require('readline').createInterface({
       input: process.stdin,
@@ -100,6 +100,6 @@ class rubikscube {
   }
 }
 
-const playRubiscube = new rubikscube();
+const playRubiscube = new Rubikscube();
 playRubiscube.setPrompt();
 
