@@ -13,15 +13,18 @@ class Rubikscube {
       output: process.stdout,
       prompt: 'CUBE> ',
     });
-    this.map = `R R W\nG C W\nG B B`;
-    this.arrayIn2d = [];
+    this.map = [["R", "R", "W"],
+                ["G", "C", "W"],
+                ["G", "B", "B"]];
   }
-
+  
   setPrompt(){
-    console.log(this.map);
+    console.log(`${this.map.map((element) => element.join(" ")).join("\n")}
+    `);
+    
     this.readline.prompt();
     this.readline.on('line', (command) => {
-      if(command == 'q') {
+      if(command == 'Q') {
         this.readline.close();
       }
       this.command = command;
@@ -31,10 +34,9 @@ class Rubikscube {
     this.exitPrompt();
   }
   
-  
   exitPrompt(){
     this.readline.on('close', (command) => {
-      console.log("exit");
+      console.log("Bye~");
       if(command = 'q'){
         process.exit();
       }
@@ -42,35 +44,30 @@ class Rubikscube {
   }
   
   init(){
-    this.convertMapInArray();
     this.splitCommand();
     this.gameStart();
   }
-
-  convertMapInArray(){
-    this.array = this.map.split("\n");
-    for(let value of this.array){
-      this.arrayIn2d.push(value.split(" "));
-    }
-  }
-
+  
   splitCommand(){
     this.commandInArray = this.command.split("");
   }
-
+  
   gameStart(){
-    this.print = [];
-
     for(let i = 0; i < this.commandInArray.length; i++){
-      if(this.commandInArray[i] === `'`){continue;}
+      this.index = i;
       if(this.commandInArray[i] === `U`){
-        this.index = i;
         this.topLineMove();
       }
-      this.print.push(this.arrayIn2d);
+      if(this.commandInArray[i] === 'R'){
+        this.rightLineMove();
+      }
+      if(this.commandInArray[i] === 'L'){
+        this.leftLineMove();
+      }
+      if(this.commandInArray[i] === 'B'){
+        this.bottomLineMove();
+      }
     }
-
-    this.gameEnd();
   }
   
   topLineMove(){
@@ -80,27 +77,106 @@ class Rubikscube {
       this.topLineMoveLeft();
     }
   }
-
+  
   topLineMoveLeft(){
-    this.topLine = this.arrayIn2d[0];
-    
-    this.headElement = this.topLine.splice(0,1);
-    this.topLine.splice(this.topLine.length, 0, this.headElement[0]);
-    
-    this.arrayIn2d.splice(0, 1, this.topLine);
+    var leftElement = this.map[0][0];
+    this.map[0][0] = this.map[0][1];
+    this.map[0][1] = this.map[0][2];
+    this.map[0][2] = leftElement;
+    this.print();
   }
   
   topLineMoveRight(){
-    this.topLine = this.arrayIn2d[0];
-    
-    this.tailElement = this.topLine.splice(this.topLine.length -1, 1);
-    this.topLine.splice(0, 0, this.tailElement[0]);
-    
-    this.arrayIn2d.splice(0, 1, this.topLine);
+    var rigthElement = this.map[0][2];
+    this.map[0][2] = this.map[0][1];
+    this.map[0][1] = this.map[0][0];
+    this.map[0][0] = rigthElement;
+    this.print();
   }
   
-  gameEnd(){
-    console.log(this.print);
+  rightLineMove(){
+    if(this.commandInArray[this.index + 1] === `'`){
+      this.rightLineMoveDown();
+    } else {
+      this.rightLineMoveUp();
+    }
+  }
+
+  rightLineMoveUp(){
+    var topElement = this.map[0][2]
+    this.map[0][2] = this.map[1][2];
+    this.map[1][2] = this.map[2][2];
+    this.map[2][2] = topElement;
+    this.print();
+  }
+
+  rightLineMoveDown(){
+    var bottomElement = this.map[2][2]
+    this.map[2][2] = this.map[1][2];
+    this.map[1][2] = this.map[0][2];
+    this.map[0][2] = bottomElement
+    this.print();
+  }
+
+  leftLineMove(){
+    if(this.commandInArray[this.index + 1] === `'`){
+      this.leftLineMoveUp();
+    } else {
+      this.leftLineMoveDown();
+    }
+  }
+
+  leftLineMoveUp(){
+    var topElement = this.map[0][0]
+    this.map[0][0] = this.map[1][0];
+    this.map[1][0] = this.map[2][0];
+    this.map[2][0] = topElement;
+    this.print();
+  }
+
+  leftLineMoveDown(){
+    var bottomElement = this.map[2][0]
+    this.map[2][0] = this.map[1][0];
+    this.map[1][0] = this.map[0][0];
+    this.map[0][0] = bottomElement
+    this.print();
+  }
+
+  bottomLineMove(){
+    if(this.commandInArray[this.index + 1] === `'`){
+      this.bottomLineMoveLeft();
+    } else {
+      this.bottomLineMoveRight();
+    }
+  }
+  
+  bottomLineMoveLeft(){
+    var leftElement = this.map[2][0];
+    this.map[2][0] = this.map[2][1];
+    this.map[2][1] = this.map[2][2];
+    this.map[2][2] = leftElement;
+    this.print();
+  }
+  
+  bottomLineMoveRight(){
+    var rigthElement = this.map[2][2];
+    this.map[2][2] = this.map[2][1];
+    this.map[2][1] = this.map[2][0];
+    this.map[2][0] = rigthElement;
+    this.print();
+  }
+
+  print(){
+    if(this.commandInArray[this.index + 1] === `'`){
+      this.printCommand = [];
+      this.printCommand.push(this.commandInArray[this.index]);
+      this.printCommand.push(this.commandInArray[this.index + 1]);
+      this.command = this.printCommand.join("");
+    } else {
+      this.command = this.commandInArray[this.index];
+    }
+
+    console.log(`${this.command}\n${this.map.map((element) => element.join(" ")).join("\n")}\n`)
   }
 }
 
