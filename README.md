@@ -29,7 +29,7 @@
   - ```exitPrompt``` : 실행된 프롬프트 종료조건
     - 사용자로부터 q 입력받으면 종료 
 
-  - analysisCommand: prompt로 입력 받은 commandLine 분석
+  - ```analysisCommand```: prompt로 입력 받은 commandLine 분석
     - ```splitCommand``` 실행
     - ```constraintsError``` 실행
   

@@ -44,8 +44,10 @@ class Rubikscube {
   }
   
   constraintsError(){
+    // 아스키코드 대문자 65 ~ 90, 소문자 97~122
+
     if(!Number(this.input.number)){
-      return console.log(`경고: 두번째 단어는 0을 제외한 숫자만 입력가능합니다.`);
+      return console.log(`경고: 숫자만 입력가능합니다.`);
     }
     if(-100 > this.input.number || 100 < this.input.number){
       return console.log(`경고: -100 <= N < 100 범위의 숫자만 입력 가능합니다.`)
